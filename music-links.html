@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro App - Music Links</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            color: #f0f0f0;
+        }
+        h1, h2 {
+            color: #5cdbf0;
+        }
+        .category {
+            margin-bottom: 30px;
+            background-color: #2a2a2a;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .link-item {
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #333;
+            border-radius: 4px;
+        }
+        .link-url {
+            font-family: monospace;
+            background-color: #444;
+            padding: 5px;
+            border-radius: 4px;
+            word-break: break-all;
+            cursor: pointer;
+            display: block;
+            margin: 5px 0;
+        }
+        .link-url:hover {
+            background-color: #555;
+        }
+        .copy-message {
+            color: #5cdbf0;
+            font-size: 0.8em;
+            margin-left: 10px;
+            display: none;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #5cdbf0;
+            text-decoration: none;
+            padding: 8px 16px;
+            background-color: #333;
+            border-radius: 4px;
+        }
+        .back-link:hover {
+            background-color: #444;
+        }
+    </style>
+</head>
+<body>
+    <h1>Music Links for Pomodoro App</h1>
+    <p>Click on any link to copy it to your clipboard, then paste it in the Custom URL field in the app.</p>
+    
+    <div class="category">
+        <h2>Lo-Fi Beats</h2>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://streams.ilovemusic.de/iloveradio17.mp3</div>
+            <div class="link-item-description">iLoveRadio Lo-Fi Stream (Most Reliable)</div>
+        </div>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://stream.laut.fm/lofi</div>
+            <div class="link-item-description">Laut.fm Lo-Fi Stream</div>
+        </div>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://play.streamafrica.net/lofiradio</div>
+            <div class="link-item-description">Stream Africa Lo-Fi Radio</div>
+        </div>
+    </div>
+    
+    <div class="category">
+        <h2>Classical Music</h2>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://strm112.1.fm/classical_mobile_mp3</div>
+            <div class="link-item-description">1.FM Classical Stream (Most Reliable)</div>
+        </div>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://live.musopen.org:8085/streamvbr0</div>
+            <div class="link-item-description">Musopen Classical Stream</div>
+        </div>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://stream.0nlineradio.com/classical</div>
+            <div class="link-item-description">Online Radio Classical Stream</div>
+        </div>
+    </div>
+    
+    <div class="category">
+        <h2>Nature Sounds</h2>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://mp3.chillhop.com/serve.php/?mp3=10075</div>
+            <div class="link-item-description">Chillhop Nature Sounds (Most Reliable)</div>
+        </div>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://stream.laut.fm/nature</div>
+            <div class="link-item-description">Laut.fm Nature Stream</div>
+        </div>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://streams.calmradio.com/api/36/128/stream</div>
+            <div class="link-item-description">Calm Radio Nature Stream</div>
+        </div>
+    </div>
+    
+    <div class="category">
+        <h2>White Noise</h2>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://streams.ilovemusic.de/iloveradio20.mp3</div>
+            <div class="link-item-description">iLoveRadio White Noise (Most Reliable)</div>
+        </div>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://stream.laut.fm/whitenoise</div>
+            <div class="link-item-description">Laut.fm White Noise Stream</div>
+        </div>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://play.streamafrica.net/whitenoiseradio</div>
+            <div class="link-item-description">Stream Africa White Noise Radio</div>
+        </div>
+    </div>
+    
+    <div class="category">
+        <h2>Calm Music</h2>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://strm112.1.fm/relaxation_mobile_mp3</div>
+            <div class="link-item-description">1.FM Relaxation Stream (Most Reliable)</div>
+        </div>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://stream.laut.fm/relaxing</div>
+            <div class="link-item-description">Laut.fm Relaxing Stream</div>
+        </div>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://streams.calmradio.com/api/151/128/stream</div>
+            <div class="link-item-description">Calm Radio Relaxation Stream</div>
+        </div>
+    </div>
+    
+    <div class="category">
+        <h2>Ambient Music</h2>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://strm112.1.fm/ambient_mobile_mp3</div>
+            <div class="link-item-description">1.FM Ambient Stream (Most Reliable)</div>
+        </div>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://stream.laut.fm/ambient</div>
+            <div class="link-item-description">Laut.fm Ambient Stream</div>
+        </div>
+        <div class="link-item">
+            <div class="link-url" onclick="copyToClipboard(this)">https://streams.calmradio.com/api/124/128/stream</div>
+            <div class="link-item-description">Calm Radio Ambient Stream</div>
+        </div>
+    </div>
+    
+    <a href="index.html" class="back-link">Back to Pomodoro App</a>
+    
+    <script>
+        function copyToClipboard(element) {
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                // Create or get copy message
+                let message = element.nextElementSibling;
+                if (!message || !message.classList.contains('copy-message')) {
+                    message = document.createElement('span');
+                    message.classList.add('copy-message');
+                    element.parentNode.insertBefore(message, element.nextSibling);
+                }
+                
+                message.textContent = 'Copied!';
+                message.style.display = 'inline';
+                
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
