@@ -76,7 +76,7 @@
                         </svg>
                     </div>
                     
-                    <div class="pomodoro-controls">
+                    <div class="timer-controls">
                         <button id="start-btn" class="control-btn">
                             <i class="fas fa-play"></i> Start
                         </button>
@@ -86,6 +86,28 @@
                         <button id="reset-btn" class="control-btn">
                             <i class="fas fa-redo"></i> Reset
                         </button>
+                        <button id="quick-focus-btn" class="quick-focus-btn"><i class="fas fa-bolt"></i> Quick Focus</button>
+                    </div>
+                    
+                    <div id="quick-focus-modal" class="modal hidden">
+                        <div class="modal-content">
+                            <span class="close-modal">&times;</span>
+                            <h3>Quick Focus Mode</h3>
+                            <p>Choose a focus duration and start immediately:</p>
+                            
+                            <div class="quick-focus-options">
+                                <button data-minutes="25" class="quick-option">25 min</button>
+                                <button data-minutes="45" class="quick-option">45 min</button>
+                                <button data-minutes="60" class="quick-option">60 min</button>
+                                <button data-minutes="90" class="quick-option">90 min</button>
+                            </div>
+                            
+                            <div class="custom-duration">
+                                <label for="custom-minutes">Custom duration (minutes):</label>
+                                <input type="number" id="custom-minutes" min="1" max="120" value="30">
+                                <button id="start-custom-focus">Start</button>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="pomodoro-stats">
@@ -235,5 +257,6 @@
     <script src="study-enhancements.js"></script>
     <script src="dashboard.js"></script>
     <script src="progress-tracker.js"></script>
+    <script src="quick-focus.js"></script>
 </body>
 </html>

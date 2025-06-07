@@ -270,18 +270,72 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('theme', 'dark');
         }
     }
+
+// Save stats to localStorage
+function saveStats() {
+    const stats = {
+        date: new Date().toLocaleDateString(),
+        pomodoroCount: pomodoroCount,
+        totalFocusSeconds: totalFocusSeconds
+    };
     
-    // Event Listeners
-    startBtn.addEventListener('click', startTimer);
-    pauseBtn.addEventListener('click', pauseTimer);
-    resetBtn.addEventListener('click', () => {
-        currentSession = 'work';
-        resetTimer();
-    });
-    saveSettingsBtn.addEventListener('click', saveSettings);
-    themeToggleBtn.addEventListener('click', toggleTheme);
-    
-    // Initialize
-    loadSettings();
-    loadTheme();
+    localStorage.setItem('pomodoroStats', JSON.stringify(stats));
+}
+
+// Reset stats
+function resetStats() {
+    pomodoroCount = 0;
+    totalFocusSeconds = 0;
+    updateStats();
+}
+
+// Play notification sound
+function playNotificationSound() {
+    const audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3');
+    audio.play().catch(error => console.log('Error playing notification sound:', error));
+}
+
+// Toggle dark/light theme
+function toggleTheme() {
+    const body = document.body;
+    if (body.classList.contains('dark-mode')) {
+        body.classList.remove('dark-mode');
+        themeIcon.className = 'fas fa-moon';
+        localStorage.setItem('theme', 'light');
+    } else {
+        body.classList.add('dark-mode');
+        themeIcon.className = 'fas fa-sun';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Load saved theme
+function loadTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+        document.body.classList.remove('dark-mode');
+        themeIcon.className = 'fas fa-moon';
+    } else {
+        // Default to dark mode
+        document.body.classList.add('dark-mode');
+        themeIcon.className = 'fas fa-sun';
+        localStorage.setItem('theme', 'dark');
+    }
+}
+
+// Event Listeners
+startBtn.addEventListener('click', startTimer);
+pauseBtn.addEventListener('click', pauseTimer);
+resetBtn.addEventListener('click', resetTimer);
+saveSettingsBtn.addEventListener('click', saveSettings);
+themeToggleBtn.addEventListener('click', toggleTheme);
+
+// Expose functions for other modules
+window.loadSettings = loadSettings;
+window.resetTimer = resetTimer;
+window.startTimer = startTimer;
+
+// Initialize
+loadSettings();
+loadTheme();
 });
