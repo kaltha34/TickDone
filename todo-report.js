@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements - Todo List
     const taskInput = document.getElementById('task-input');
     const timeEstimateInput = document.getElementById('time-estimate');
+    const taskPrioritySelect = document.getElementById('task-priority');
+    const taskCategorySelect = document.getElementById('task-category');
     const addTaskBtn = document.getElementById('add-task-btn');
     const todoList = document.getElementById('todo-list');
     const filterAllBtn = document.getElementById('filter-all');
@@ -10,10 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterCompletedBtn = document.getElementById('filter-completed');
     const clearCompletedBtn = document.getElementById('clear-completed-btn');
     const generateReportBtn = document.getElementById('generate-report-btn');
+    const filterCategorySelect = document.getElementById('filter-category');
+    const filterPrioritySelect = document.getElementById('filter-priority');
     
     // Todo List Variables
     let todos = [];
     let currentFilter = 'all';
+    let currentCategoryFilter = 'all';
+    let currentPriorityFilter = 'all';
     
     // Load todos from localStorage
     function loadTodos() {
@@ -29,23 +35,36 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('todos', JSON.stringify(todos));
     }
     
-    // Render todos based on current filter
+    // Render todos
     function renderTodos() {
-        // Clear current list
         todoList.innerHTML = '';
         
-        // Filter todos
-        let filteredTodos = todos;
-        if (currentFilter === 'active') {
+        // Filter todos based on current filter, category, and priority
+        let filteredTodos = [];
+        
+        // First filter by completion status
+        if (currentFilter === 'all') {
+            filteredTodos = [...todos];
+        } else if (currentFilter === 'active') {
             filteredTodos = todos.filter(todo => !todo.completed);
         } else if (currentFilter === 'completed') {
             filteredTodos = todos.filter(todo => todo.completed);
         }
         
+        // Then filter by category if not 'all'
+        if (currentCategoryFilter !== 'all') {
+            filteredTodos = filteredTodos.filter(todo => todo.category === currentCategoryFilter);
+        }
+        
+        // Then filter by priority if not 'all'
+        if (currentPriorityFilter !== 'all') {
+            filteredTodos = filteredTodos.filter(todo => todo.priority === currentPriorityFilter);
+        }
+        
         // Render filtered todos
         filteredTodos.forEach(todo => {
             const todoItem = document.createElement('li');
-            todoItem.className = `todo-item ${todo.completed ? 'todo-completed' : ''}`;
+            todoItem.className = `todo-item ${todo.completed ? 'todo-completed' : ''} ${todo.priority ? 'priority-' + todo.priority : ''}`;
             todoItem.dataset.id = todo.id;
             
             const checkbox = document.createElement('input');
@@ -60,9 +79,37 @@ document.addEventListener('DOMContentLoaded', () => {
             todoTitle.className = 'todo-title';
             todoTitle.textContent = todo.title;
             
-            const todoEstimate = document.createElement('div');
-            todoEstimate.className = 'todo-estimate';
-            todoEstimate.textContent = todo.timeEstimate ? `Estimated: ${todo.timeEstimate} min` : '';
+            // Add category badge if available
+            if (todo.category) {
+                const categoryBadge = document.createElement('span');
+                categoryBadge.className = `category-badge category-${todo.category}`;
+                categoryBadge.textContent = todo.category.charAt(0).toUpperCase() + todo.category.slice(1);
+                todoTitle.appendChild(categoryBadge);
+            }
+            
+            const todoDetails = document.createElement('div');
+            todoDetails.className = 'todo-details';
+            
+            // Add time estimate
+            if (todo.timeEstimate) {
+                const todoEstimate = document.createElement('span');
+                todoEstimate.className = 'todo-estimate';
+                todoEstimate.innerHTML = `<i class="fas fa-clock"></i> ${todo.timeEstimate} min`;
+                todoDetails.appendChild(todoEstimate);
+            }
+            
+            // Add priority indicator
+            if (todo.priority) {
+                const todoPriority = document.createElement('span');
+                todoPriority.className = `todo-priority priority-${todo.priority}-text`;
+                const priorityIcons = {
+                    'high': '<i class="fas fa-exclamation-circle"></i> High',
+                    'medium': '<i class="fas fa-dot-circle"></i> Medium',
+                    'low': '<i class="fas fa-arrow-down"></i> Low'
+                };
+                todoPriority.innerHTML = priorityIcons[todo.priority] || '';
+                todoDetails.appendChild(todoPriority);
+            }
             
             const todoActions = document.createElement('div');
             todoActions.className = 'todo-actions';
@@ -77,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Append elements
             todoContent.appendChild(todoTitle);
-            todoContent.appendChild(todoEstimate);
+            todoContent.appendChild(todoDetails);
             
             todoActions.appendChild(editBtn);
             todoActions.appendChild(deleteBtn);
@@ -99,6 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function addTodo() {
         const title = taskInput.value.trim();
         const timeEstimate = parseInt(timeEstimateInput.value) || null;
+        const priority = taskPrioritySelect.value;
+        const category = taskCategorySelect.value;
         
         if (title === '') return;
         
@@ -106,6 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
             id: Date.now().toString(),
             title,
             timeEstimate,
+            priority,
+            category,
             completed: false,
             createdAt: new Date().toISOString()
         };
@@ -117,6 +168,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear inputs
         taskInput.value = '';
         timeEstimateInput.value = '';
+        // Reset priority to medium and keep the category as is
+        taskPrioritySelect.value = 'medium';
         taskInput.focus();
     }
     
@@ -138,24 +191,112 @@ document.addEventListener('DOMContentLoaded', () => {
         const todo = todos.find(todo => todo.id === id);
         if (!todo) return;
         
-        const newTitle = prompt('Edit task:', todo.title);
-        if (newTitle === null) return; // User canceled
+        // Create a modal for editing instead of using prompts
+        const editModal = document.createElement('div');
+        editModal.className = 'modal';
+        editModal.innerHTML = `
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h3>Edit Task</h3>
+                <div class="edit-form">
+                    <div class="form-group">
+                        <label for="edit-title">Task Title:</label>
+                        <input type="text" id="edit-title" value="${todo.title}">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-time">Time Estimate (minutes):</label>
+                        <input type="number" id="edit-time" value="${todo.timeEstimate || ''}" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-priority">Priority:</label>
+                        <select id="edit-priority">
+                            <option value="low" ${todo.priority === 'low' ? 'selected' : ''}>Low</option>
+                            <option value="medium" ${todo.priority === 'medium' ? 'selected' : ''}>Medium</option>
+                            <option value="high" ${todo.priority === 'high' ? 'selected' : ''}>High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-category">Category:</label>
+                        <select id="edit-category">
+                            <option value="study" ${todo.category === 'study' ? 'selected' : ''}>Study</option>
+                            <option value="assignment" ${todo.category === 'assignment' ? 'selected' : ''}>Assignment</option>
+                            <option value="exam" ${todo.category === 'exam' ? 'selected' : ''}>Exam Prep</option>
+                            <option value="project" ${todo.category === 'project' ? 'selected' : ''}>Project</option>
+                            <option value="reading" ${todo.category === 'reading' ? 'selected' : ''}>Reading</option>
+                            <option value="other" ${todo.category === 'other' ? 'selected' : ''}>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button id="save-edit-btn">Save Changes</button>
+                        <button id="cancel-edit-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        `;
         
-        const newTimeEstimate = prompt('Edit time estimate (minutes):', todo.timeEstimate || '');
+        document.body.appendChild(editModal);
         
-        todos = todos.map(todo => {
-            if (todo.id === id) {
-                return { 
-                    ...todo, 
-                    title: newTitle.trim() || todo.title,
-                    timeEstimate: parseInt(newTimeEstimate) || todo.timeEstimate
-                };
+        // Show the modal
+        setTimeout(() => {
+            editModal.classList.add('show');
+        }, 10);
+        
+        // Get form elements
+        const titleInput = document.getElementById('edit-title');
+        const timeInput = document.getElementById('edit-time');
+        const prioritySelect = document.getElementById('edit-priority');
+        const categorySelect = document.getElementById('edit-category');
+        const saveBtn = document.getElementById('save-edit-btn');
+        const cancelBtn = document.getElementById('cancel-edit-btn');
+        const closeBtn = editModal.querySelector('.close-modal');
+        
+        // Focus on title input
+        titleInput.focus();
+        
+        // Close modal function
+        const closeModal = () => {
+            editModal.classList.remove('show');
+            setTimeout(() => {
+                document.body.removeChild(editModal);
+            }, 300);
+        };
+        
+        // Event listeners
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        
+        // Close when clicking outside
+        editModal.addEventListener('click', (e) => {
+            if (e.target === editModal) {
+                closeModal();
             }
-            return todo;
         });
         
-        saveTodos();
-        renderTodos();
+        // Save changes
+        saveBtn.addEventListener('click', () => {
+            const newTitle = titleInput.value.trim();
+            if (!newTitle) {
+                alert('Task title cannot be empty');
+                return;
+            }
+            
+            todos = todos.map(t => {
+                if (t.id === id) {
+                    return { 
+                        ...t, 
+                        title: newTitle,
+                        timeEstimate: parseInt(timeInput.value) || null,
+                        priority: prioritySelect.value,
+                        category: categorySelect.value
+                    };
+                }
+                return t;
+            });
+            
+            saveTodos();
+            renderTodos();
+            closeModal();
+        });
     }
     
     // Delete todo
@@ -221,30 +362,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const dateFormatted = now.toLocaleDateString();
             const timeFormatted = now.toLocaleTimeString();
             
-            // Create PDF using direct CDN approach
-            if (typeof window.jspdf === 'undefined') {
-                console.error('jsPDF not found, trying alternative approach');
-                // Load jsPDF dynamically if not available
-                const script = document.createElement('script');
-                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-                document.head.appendChild(script);
-                
-                script.onload = () => {
-                    const autoTableScript = document.createElement('script');
-                    autoTableScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js';
-                    document.head.appendChild(autoTableScript);
-                    
-                    autoTableScript.onload = () => {
-                        setTimeout(() => generateReport(), 500); // Try again after scripts are loaded
-                    };
-                };
-                
+            // Check if jsPDF is available
+            if (typeof window.jspdf === 'undefined' && typeof window.jsPDF === 'undefined') {
+                console.error('jsPDF not found');
+                alert('PDF generation library not loaded. Please refresh the page and try again.');
                 return;
             }
             
             // Create PDF document
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+            let doc;
+            if (typeof window.jspdf !== 'undefined') {
+                const { jsPDF } = window.jspdf;
+                doc = new jsPDF();
+            } else {
+                doc = new window.jsPDF();
+            }
             
             // Add title
             doc.setFontSize(22);
@@ -265,32 +397,64 @@ document.addEventListener('DOMContentLoaded', () => {
             doc.text(`Pomodoros Completed: ${stats.pomodoroCount}`, 30, 60);
             doc.text(`Total Focus Time: ${focusTimeFormatted}`, 30, 70);
             
-            // Add completed tasks
+            // Add completed tasks section
             doc.setFontSize(16);
             doc.text('Completed Tasks', 20, 90);
             
-            if (completedTodos.length > 0) {
-                // Create table for completed tasks
-                const tableData = [];
-                completedTodos.forEach((todo, index) => {
-                    tableData.push([
-                        index + 1,
-                        todo.title,
-                        todo.timeEstimate ? `${todo.timeEstimate} min` : 'N/A'
-                    ]);
-                });
-                
-                doc.autoTable({
-                    startY: 100,
-                    head: [['#', 'Task', 'Estimated Time']],
-                    body: tableData,
-                    theme: 'striped',
-                    headStyles: { fillColor: [66, 97, 238] }
-                });
-            } else {
-                doc.setFontSize(12);
-                doc.text('No tasks completed today.', 30, 100);
-            }
+            // Create table with priority and category
+            const tableColumn = ['Task', 'Category', 'Priority', 'Time Est. (min)', 'Completed At'];
+            const tableRows = [];
+            
+            // Priority display mapping
+            const priorityMap = {
+                'high': 'High ⚠️',
+                'medium': 'Medium ●',
+                'low': 'Low ↓'
+            };
+            
+            // Category display mapping
+            const categoryMap = {
+                'study': 'Study 📚',
+                'assignment': 'Assignment 📝',
+                'exam': 'Exam Prep 📋',
+                'project': 'Project 🚀',
+                'reading': 'Reading 📖',
+                'other': 'Other 📌'
+            };
+            
+            completedTodos.forEach(todo => {
+                const completedDate = new Date(todo.completedAt || todo.createdAt);
+                const row = [
+                    todo.title,
+                    categoryMap[todo.category] || 'N/A',
+                    priorityMap[todo.priority] || 'N/A',
+                    todo.timeEstimate || '-',
+                    completedDate.toLocaleString()
+                ];
+                tableRows.push(row);
+            });
+            
+            // Add table to PDF
+            doc.autoTable({
+                startY: 95,
+                head: [tableColumn],
+                body: tableRows,
+                theme: 'grid',
+                headStyles: {
+                    fillColor: [66, 97, 238],
+                    textColor: 255
+                },
+                alternateRowStyles: {
+                    fillColor: [240, 240, 240]
+                },
+                columnStyles: {
+                    0: { cellWidth: 'auto' },
+                    1: { cellWidth: 30 },
+                    2: { cellWidth: 25 },
+                    3: { cellWidth: 25 },
+                    4: { cellWidth: 40 }
+                }
+            });
             
             // Add quote at the bottom
             const finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 20 : 120;
@@ -298,7 +462,7 @@ document.addEventListener('DOMContentLoaded', () => {
             doc.setFontSize(12);
             doc.setTextColor(108, 117, 125);
             doc.text('Today\'s Inspiration:', 20, finalY);
-            doc.setFontStyle('italic');
+            doc.setFont(undefined, 'italic');
             doc.text(`"${randomQuote}"`, 20, finalY + 10);
             
             // Save PDF
@@ -318,6 +482,18 @@ document.addEventListener('DOMContentLoaded', () => {
     filterAllBtn.addEventListener('click', () => setFilter('all'));
     filterActiveBtn.addEventListener('click', () => setFilter('active'));
     filterCompletedBtn.addEventListener('click', () => setFilter('completed'));
+    
+    // Filter by category
+    filterCategorySelect.addEventListener('change', () => {
+        currentCategoryFilter = filterCategorySelect.value;
+        renderTodos();
+    });
+    
+    // Filter by priority
+    filterPrioritySelect.addEventListener('change', () => {
+        currentPriorityFilter = filterPrioritySelect.value;
+        renderTodos();
+    });
     
     clearCompletedBtn.addEventListener('click', clearCompleted);
     generateReportBtn.addEventListener('click', generateReport);
