@@ -411,6 +411,92 @@ main {
   background-color: var(--success-color);
 }
 
+/* Study Progress Tracker */
+.study-progress-container {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.study-progress-container h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.progress-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--accent-primary);
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.progress-bar-container {
+  height: 12px;
+  background-color: var(--bg-primary);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background-color: var(--accent-primary);
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
+
+.daily-goal-setting {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.daily-goal-setting input {
+  width: 60px;
+  padding: 4px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.daily-goal-setting button {
+  padding: 4px 8px;
+  background-color: var(--accent-secondary);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.daily-goal-setting button:hover {
+  background-color: var(--accent-primary);
+}
+
 /* Footer Styles */
 footer {
   margin-top: 2rem;

@@ -202,6 +202,21 @@ document.addEventListener('DOMContentLoaded', () => {
         focusTimeElement.textContent = `${hours}h ${minutes}m`;
         
         saveStats();
+        
+        // Emit event for other modules to listen to
+        const event = new CustomEvent('pomodoroCompleted', {
+            detail: {
+                pomodoroCount: pomodoroCount,
+                totalFocusSeconds: totalFocusSeconds,
+                currentSession: currentSession
+            }
+        });
+        document.dispatchEvent(event);
+        
+        // Update study progress if function exists
+        if (window.updateStudyProgress) {
+            window.updateStudyProgress(totalFocusSeconds);
+        }
     }
     
     // Save stats to localStorage

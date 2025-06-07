@@ -92,6 +92,31 @@
                         <div class="pomodoro-count">
                             <span id="pomodoro-completed">0</span> Pomodoros completed
                         </div>
+                        <div class="study-progress-container">
+                            <h3>Today's Study Progress</h3>
+                            <div class="progress-stats">
+                                <div class="stat-item">
+                                    <span class="stat-value" id="focus-minutes">0</span>
+                                    <span class="stat-label">Minutes Focused</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="completion-percentage">0%</span>
+                                    <span class="stat-label">Daily Goal</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-value" id="streak-count">0</span>
+                                    <span class="stat-label">Day Streak</span>
+                                </div>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="daily-progress-bar"></div>
+                            </div>
+                            <div class="daily-goal-setting">
+                                <label for="daily-goal">Daily Focus Goal (minutes):</label>
+                                <input type="number" id="daily-goal" min="1" max="480" value="120">
+                                <button id="set-goal-btn">Set Goal</button>
+                            </div>
+                        </div>
                         <div class="focus-time">
                             <span id="focus-time">0h 0m</span> focused today
                         </div>
@@ -209,5 +234,6 @@
     <script src="todo-report.js"></script>
     <script src="study-enhancements.js"></script>
     <script src="dashboard.js"></script>
+    <script src="progress-tracker.js"></script>
 </body>
 </html>
