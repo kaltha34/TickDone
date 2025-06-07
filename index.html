@@ -11,8 +11,14 @@
 </head>
 <body class="dark-mode">
     <div class="container">
-        <header>
-            <h1>Pomodoro Productivity App</h1>
+        <header class="app-header">
+            <div class="header-content">
+                <h1>TickDone</h1>
+                <div class="student-dashboard-header">
+                    <div class="date-display" id="current-date">Loading date...</div>
+                    <div class="greeting" id="student-greeting">Hello, Student!</div>
+                </div>
+            </div>
             <button id="theme-toggle" aria-label="Toggle dark/light mode">
                 <i class="fas fa-moon"></i>
             </button>
@@ -202,5 +208,6 @@
     <script src="pomodoro.js"></script>
     <script src="todo-report.js"></script>
     <script src="study-enhancements.js"></script>
+    <script src="dashboard.js"></script>
 </body>
 </html>
