@@ -170,16 +170,65 @@
             <section class="todo-section">
                 <h2>Today's Tasks</h2>
                 <div class="todo-form">
-                    <input type="text" id="task-input" placeholder="Add a new task...">
-                    <input type="number" id="time-estimate" placeholder="Est. time (min)" min="1">
-                    <button id="add-task-btn">
-                        <i class="fas fa-plus"></i> Add Task
-                    </button>
+                    <div class="task-input-row">
+                        <input type="text" id="task-input" placeholder="Add a new task...">
+                        <button id="add-task-btn">
+                            <i class="fas fa-plus"></i> Add Task
+                        </button>
+                    </div>
+                    <div class="task-details-row">
+                        <div class="task-detail">
+                            <label for="time-estimate">Time:</label>
+                            <input type="number" id="time-estimate" placeholder="Min" min="1">
+                        </div>
+                        <div class="task-detail">
+                            <label for="task-priority">Priority:</label>
+                            <select id="task-priority">
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        <div class="task-detail">
+                            <label for="task-category">Category:</label>
+                            <select id="task-category">
+                                <option value="study">Study</option>
+                                <option value="assignment">Assignment</option>
+                                <option value="exam">Exam Prep</option>
+                                <option value="project">Project</option>
+                                <option value="reading">Reading</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="todo-filters">
-                    <button id="filter-all" class="filter-btn active">All</button>
-                    <button id="filter-active" class="filter-btn">Active</button>
-                    <button id="filter-completed" class="filter-btn">Completed</button>
+                    <div class="filter-group">
+                        <button id="filter-all" class="filter-btn active">All</button>
+                        <button id="filter-active" class="filter-btn">Active</button>
+                        <button id="filter-completed" class="filter-btn">Completed</button>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-priority">Priority:</label>
+                        <select id="filter-priority">
+                            <option value="all">All Priorities</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-category">Category:</label>
+                        <select id="filter-category">
+                            <option value="all">All Categories</option>
+                            <option value="study">Study</option>
+                            <option value="assignment">Assignment</option>
+                            <option value="exam">Exam Prep</option>
+                            <option value="project">Project</option>
+                            <option value="reading">Reading</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
                 </div>
                 <ul id="todo-list" class="todo-list">
                     <!-- Tasks will be added here dynamically -->
