@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Productivity App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body class="dark-mode">
+    <div class="container">
+        <header>
+            <h1>Pomodoro Productivity App</h1>
+            <button id="theme-toggle" aria-label="Toggle dark/light mode">
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
+
+        <main>
+            <section class="study-enhancements">
+                <div class="enhancement-container">
+                    <div class="music-player">
+                        <h3><i class="fas fa-music"></i> Study Music</h3>
+                        <div class="music-controls">
+                            <select id="music-select">
+                                <option value="">Select music type...</option>
+                                <option value="lofi">Lo-Fi Beats</option>
+                                <option value="classical">Classical Focus</option>
+                                <option value="nature">Nature Sounds</option>
+                                <option value="whitenoise">White Noise</option>
+                                <option value="calm">Calm Music</option>
+                                <option value="custom">Custom URL</option>
+                            </select>
+                            <div id="custom-url-container" class="hidden">
+                                <input type="text" id="custom-music-url" placeholder="Enter audio stream URL...">
+                                <button id="apply-custom-url">Apply</button>
+                            </div>
+                            <div class="player-controls">
+                                <button id="play-music" disabled><i class="fas fa-play"></i></button>
+                                <button id="pause-music" disabled><i class="fas fa-pause"></i></button>
+                                <input type="range" id="volume-control" min="0" max="100" value="50">
+                            </div>
+                            <div class="music-links-container">
+                                <a href="music-links.html" class="music-links-button" target="_blank">View All Music Links</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="focus-quote">
+                        <h3><i class="fas fa-quote-left"></i> Focus Quote</h3>
+                        <blockquote id="quote-text">
+                            "The secret of getting ahead is getting started."
+                        </blockquote>
+                        <p id="quote-author">- Mark Twain</p>
+                        <button id="new-quote-btn"><i class="fas fa-sync"></i> New Quote</button>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="pomodoro-section">
+                <div class="pomodoro-container">
+                    <div class="timer-display">
+                        <svg class="progress-ring" width="300" height="300">
+                            <circle class="progress-ring__circle-bg" cx="150" cy="150" r="120" />
+                            <circle class="progress-ring__circle" cx="150" cy="150" r="120" />
+                            <text x="150" y="150" text-anchor="middle" class="timer-text">25:00</text>
+                            <text x="150" y="180" text-anchor="middle" class="session-label">Work</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="pomodoro-controls">
+                        <button id="start-btn" class="control-btn">
+                            <i class="fas fa-play"></i> Start
+                        </button>
+                        <button id="pause-btn" class="control-btn" disabled>
+                            <i class="fas fa-pause"></i> Pause
+                        </button>
+                        <button id="reset-btn" class="control-btn">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                    </div>
+
+                    <div class="pomodoro-stats">
+                        <div class="pomodoro-count">
+                            <span id="pomodoro-completed">0</span> Pomodoros completed
+                        </div>
+                        <div class="focus-time">
+                            <span id="focus-time">0h 0m</span> focused today
+                        </div>
+                    </div>
+
+                    <div class="timer-settings">
+                        <h3>Timer Settings</h3>
+                        <div class="settings-group">
+                            <label for="work-duration">Work (minutes):</label>
+                            <input type="number" id="work-duration" min="1" max="60" value="25">
+                        </div>
+                        <div class="settings-group">
+                            <label for="short-break-duration">Short Break (minutes):</label>
+                            <input type="number" id="short-break-duration" min="1" max="30" value="5">
+                        </div>
+                        <div class="settings-group">
+                            <label for="long-break-duration">Long Break (minutes):</label>
+                            <input type="number" id="long-break-duration" min="1" max="60" value="15">
+                        </div>
+                        <div class="settings-group">
+                            <label for="pomodoro-cycle">Long break after (pomodoros):</label>
+                            <input type="number" id="pomodoro-cycle" min="1" max="10" value="4">
+                        </div>
+                        <button id="save-settings" class="settings-btn">Save Settings</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="todo-section">
+                <h2>Today's Tasks</h2>
+                <div class="todo-form">
+                    <input type="text" id="task-input" placeholder="Add a new task...">
+                    <input type="number" id="time-estimate" placeholder="Est. time (min)" min="1">
+                    <button id="add-task-btn">
+                        <i class="fas fa-plus"></i> Add Task
+                    </button>
+                </div>
+                <div class="todo-filters">
+                    <button id="filter-all" class="filter-btn active">All</button>
+                    <button id="filter-active" class="filter-btn">Active</button>
+                    <button id="filter-completed" class="filter-btn">Completed</button>
+                </div>
+                <ul id="todo-list" class="todo-list">
+                    <!-- Tasks will be added here dynamically -->
+                </ul>
+                <div class="todo-actions">
+                    <button id="clear-completed-btn">Clear Completed</button>
+                    <button id="generate-report-btn">Generate Report</button>
+                </div>
+            </section>
+            
+            <section class="notes-section">
+                <h2>Study Notes</h2>
+                <div class="notes-container">
+                    <div class="notes-header">
+                        <div class="subject-selector">
+                            <select id="subject-select">
+                                <option value="">Select Subject...</option>
+                                <option value="math">Mathematics</option>
+                                <option value="science">Science</option>
+                                <option value="history">History</option>
+                                <option value="language">Language</option>
+                                <option value="programming">Programming</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <input type="text" id="custom-subject" placeholder="Custom subject name..." class="hidden">
+                            <button id="add-subject-btn"><i class="fas fa-plus"></i> Add Subject</button>
+                        </div>
+                        
+                        <div class="notes-actions">
+                            <button id="save-note-btn"><i class="fas fa-save"></i> Save</button>
+                            <button id="download-note-btn"><i class="fas fa-download"></i> Download</button>
+                            <button id="clear-note-btn"><i class="fas fa-trash"></i> Clear</button>
+                        </div>
+                    </div>
+                    
+                    <div class="formatting-toolbar">
+                        <button data-command="bold" class="format-btn" title="Bold"><i class="fas fa-bold"></i></button>
+                        <button data-command="italic" class="format-btn" title="Italic"><i class="fas fa-italic"></i></button>
+                        <button data-command="underline" class="format-btn" title="Underline"><i class="fas fa-underline"></i></button>
+                        <button data-command="strikeThrough" class="format-btn" title="Strike through"><i class="fas fa-strikethrough"></i></button>
+                        <span class="separator">|</span>
+                        <button data-command="justifyLeft" class="format-btn" title="Align left"><i class="fas fa-align-left"></i></button>
+                        <button data-command="justifyCenter" class="format-btn" title="Align center"><i class="fas fa-align-center"></i></button>
+                        <button data-command="justifyRight" class="format-btn" title="Align right"><i class="fas fa-align-right"></i></button>
+                        <span class="separator">|</span>
+                        <button data-command="insertUnorderedList" class="format-btn" title="Bullet list"><i class="fas fa-list-ul"></i></button>
+                        <button data-command="insertOrderedList" class="format-btn" title="Numbered list"><i class="fas fa-list-ol"></i></button>
+                        <span class="separator">|</span>
+                        <select id="heading-select" class="format-select">
+                            <option value="">Paragraph</option>
+                            <option value="h1">Heading 1</option>
+                            <option value="h2">Heading 2</option>
+                            <option value="h3">Heading 3</option>
+                        </select>
+                    </div>
+                    
+                    <div id="notes-list" class="notes-list">
+                        <!-- Subject tabs will be added here dynamically -->
+                    </div>
+                    
+                    <div id="editor-container" class="editor-container">
+                        <div id="study-notes" class="rich-editor" contenteditable="true" placeholder="Take notes during your study session here..."></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Made with ❤️ | <span id="current-date"></span></p>
+        </footer>
+    </div>
+
+    <script src="pomodoro.js"></script>
+    <script src="todo-report.js"></script>
+    <script src="study-enhancements.js"></script>
+</body>
+</html>
